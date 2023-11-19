@@ -30,6 +30,12 @@
             {{ $messageerror }}
         </div>
     @endif
+
+    @error('foto')
+        <div class="alert alert-outline-error">
+            <p>{{ $messageerror }}</p>
+        </div>
+    @enderror
     </div>
 </div>
 <form action="/presensi/{{ $karyawan->nik }}/updateprofile" method="POST" enctype="multipart/form-data">

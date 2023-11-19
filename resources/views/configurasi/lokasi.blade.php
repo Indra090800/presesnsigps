@@ -69,7 +69,7 @@
                                             <path d="M6.337 17.657a8 8 0 0 1 0 -11.314"></path>
                                             </svg>
                                         </span>
-                                        <input type="text" value="{{ $lok_kantor->radius }}" name="radius" class="form-control" placeholder="Radius Kantor" id="radius">
+                                        <input type="number" value="{{ $lok_kantor->radius }}" name="radius" class="form-control" placeholder="Radius Kantor" id="radius">
                                     </div>
                                 </div>
                             </div>

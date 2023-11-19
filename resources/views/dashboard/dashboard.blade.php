@@ -18,6 +18,7 @@
                 <div id="user-info">
                     <h2 id="user-name">{{ Auth::guard('karyawan')->user()->nama_lengkap }}</h2>
                     <span id="user-role">{{ Auth::guard('karyawan')->user()->jabatan }}</span>
+                    <span id="user-role"><b>({{ Auth::guard('karyawan')->user()->kode_cabang }})</b></span>
                 </div>
             </div>
         </div>
@@ -64,6 +65,16 @@
                             </div>
                             <div class="menu-name">
                                 Lokasi
+                            </div>
+                        </div>
+                        <div class="item-menu text-center">
+                            <div class="menu-icon">
+                                <a href="/proseslogout" class="danger" style="font-size: 40px;">
+                                    <ion-icon name="log-out-outline"></ion-icon>
+                                </a>
+                            </div>
+                            <div class="menu-name">
+                                Logout
                             </div>
                         </div>
                     </div>
@@ -182,7 +193,7 @@
                 </div>
                 <div class="tab-content mt-2" style="margin-bottom:100px;">
                     <div class="tab-pane fade show active" id="home" role="tabpanel">
-                        <ul class="listview image-listview">
+                        {{-- <ul class="listview image-listview">
 
                             @foreach ($historybulanini as $d)
                             @php
@@ -203,7 +214,57 @@
                             </li>
                             @endforeach
                             
-                        </ul>
+                        </ul> --}}
+                        <style>
+                            .historycontent{
+                                display: flex;
+                            }
+                            .datapresensi{
+                                margin-left: 10px
+                            }
+                        </style>
+                        @foreach ($historybulanini as $d)
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="historycontent">
+                                        <div class="iconpresensi">
+                                            <ion-icon name="finger-print-outline" style="font-size: 48px" class="text-success"></ion-icon>
+                                        </div>
+                                        <div class="datapresensi">
+                                            <h3 style="line-height: 3px">{{ $d->nama_jamKerja }}</h3>
+                                            <h4 style="margin: 0px !important">{{ date("d-m-Y", strtotime($d->tgl_presensi)) }}</h4>
+                                            <span>
+                                                {!! $d->jam_in != null ? date("H:i", strtotime($d->jam_in)) : '<span class="text-danger">Belum Scan</span>' !!}
+                                            </span> -
+                                            <span>
+                                                {!! $d->jam_out != null ? date("H:i", strtotime($d->jam_out)) : '<span class="text-danger">Belum Scan</span>' !!}
+                                            </span>
+                                            <br>
+                                            <span>
+                                                {!! date("H:i", strtotime($d->jam_in)) > date("H:i", strtotime($d->jam_masuk)) ? '<span class="text-danger">Terlambat</span>' : '<span class="text-success">Tepat Waktu</span>' !!}
+                                            </span>
+                                            <div class="mt-2" id="keterangan">
+                                                @php
+                                                    $jam_in = date("H:i", strtotime($d->jam_in));
+                                                    $jam_masuk = date("H:i", strtotime($d->jam_masuk));
+
+                                                    $jadwal_jmasuk = $d->tgl_presensi."".$jam_masuk;
+                                                    $jpresensi = $d->tgl_presensi."".$jam_in;
+                                                @endphp
+                                                @if ($jam_in > $jam_masuk)
+                                                @php
+                                                    $jmlterlambat = hitungjamterlambar($jadwal_jmasuk, $jpresensi);
+                                                @endphp
+                                                    <span class="danger">Terlambat {{ $jmlterlambat }}</span>
+                                                @else
+                                                    <span style="color: green">Tepat Waktu</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
                     <div class="tab-pane fade" id="profile" role="tabpanel">
                         <ul class="listview image-listview">

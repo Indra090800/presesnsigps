@@ -14,7 +14,7 @@
   <!-- Set page size here: A5, A4 or A3 -->
   <!-- Set also "landscape" if you need -->
   <style>
-  @page { size: A4 }
+  @page { size: Letter }
   #h3{
     font-family: Arial, Helvetica, sans-serif;
     font-size: 18px;
@@ -51,7 +51,7 @@
 
 <!-- Set "A5", "A4" or "A3" for class name -->
 <!-- Set also "landscape" if you need -->
-<body class="A4 landscape">
+<body class="Letter landscape">
   <!-- Each sheet element should have the class "sheet" -->
   <!-- "padding-**mm" is optional: you can set 10, 15, 20 or 25 -->
   <section class="sheet padding-10mm">
@@ -105,14 +105,14 @@
                         }else{
                             $hadir = explode("-",$r->$tgl);
                             $totalhadir += 1;
-                            if($hadir[0] > '07:00:00'){
+                            if($hadir[0] > $r->jam_masuk){
                                 $totallambat += 1;
                             }
                         }
                 ?>
                 <td>
-                    <span style="color:{{ $hadir[0]>"07:00:00" ? "red" : "" }}">{{ $hadir[0] }}</span><br>
-                    <span style="color:{{ $hadir[1]<"16:00:00" ? "red" : "" }}">{{ $hadir[1] }}</span>
+                    <span style="color:{{ $hadir[0]>$r->jam_masuk ? "red" : "" }}">{{ !empty($hadir[0]) ? $hadir[0] : '-' }}</span><br>
+                    <span style="color:{{ $hadir[1]<$r->jam_pulang ? "red" : "" }}">{{ !empty($hadir[1]) ? $hadir[1] : '-' }}</span>
                 </td>
                 
                 <?php

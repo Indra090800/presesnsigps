@@ -41,23 +41,26 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <table class="table table-sthiped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>NIK</th>
-                                            <th>Nama Karyawan</th>
-                                            <th>Departemen</th>
-                                            <th>Jam Masuk</th>
-                                            <th>Foto Masuk</th>
-                                            <th>Jam Pulang</th>
-                                            <th>Foto Pulang</th>
-                                            <th>Keterangan</th>
-                                            <th>#</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="loadpresensi"></tbody>
-                                </table>
+                                <div class="table-responsive">
+                                    <table class="table table-sthiped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>NIK</th>
+                                                <th>Nama Karyawan</th>
+                                                <th>Departemen</th>
+                                                <th>Jam Kerja</th>
+                                                <th>Jam Masuk</th>
+                                                <th>Foto Masuk</th>
+                                                <th>Jam Pulang</th>
+                                                <th>Foto Pulang</th>
+                                                <th>Keterangan</th>
+                                                <th>#</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="loadpresensi"></tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>

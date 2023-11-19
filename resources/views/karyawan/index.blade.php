@@ -86,65 +86,75 @@
                         
                         <div class="row">
                             <div class="col-12">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center">No</th>
-                                            <th class="text-center">NIK</th>
-                                            <th class="text-center">Nama</th>
-                                            <th class="text-center">Jabatan</th>
-                                            <th class="text-center">No. HP</th>
-                                            <th class="text-center">Foto</th>
-                                            <th class="text-center">Departemen</th>
-                                            <th class="text-center">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($karyawan as $k)
-                                        @php
-                                            $path = Storage::url('uploads/karyawan/'.$k->foto);
-                                        @endphp
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-responsive">
+                                        <thead>
                                             <tr>
-                                                <td>{{ $loop->iteration + $karyawan->firstItem()-1 }}</td>
-                                                <td>{{ $k->nik }}</td>
-                                                <td>{{ $k->nama_lengkap }}</td>
-                                                <td>{{ $k->jabatan }}</td>
-                                                <td>{{ $k->no_hp }}</td>
-                                                <td class="text-center">
-                                                    @if (empty($k->foto))
-                                                    <img src="{{ asset('assets/img/nophoto.png') }}" class="avatar" alt="">
-                                                    @else
-                                                    <img src="{{ url($path) }}" class="avatar" alt="">
-                                                    @endif
-                                                </td>
-                                                <td>{{ $k->nama_dept }}</td>
-                                                <td class="text-center">
-                                                    <div class="btn-group">
-                                                    <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editkaryawan{{ $k->nik }}">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                        <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
-                                                        <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
-                                                        <path d="M16 5l3 3"></path>
-                                                        </svg>
-                                                    </a>
-                                                    <form action="/karyawan/{{ $k->nik }}/delete" method="POST" style="margin-left: 5px;">
-                                                        @csrf
-                                                        <a class="btn btn-danger btn-sm btnEdit">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eraser" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                        <path d="M19 20h-10.5l-4.21 -4.3a1 1 0 0 1 0 -1.41l10 -10a1 1 0 0 1 1.41 0l5 5a1 1 0 0 1 0 1.41l-9.2 9.3"></path>
-                                                        <path d="M18 13.3l-6.3 -6.3"></path>
-                                                        </svg>
-                                                        </a>
-                                                    </form>
-                                                    </div>
-                                                </td>
+                                                <th class="text-center">No</th>
+                                                <th class="text-center">NIK</th>
+                                                <th class="text-center">Nama</th>
+                                                <th class="text-center">Jabatan</th>
+                                                <th class="text-center">No. HP</th>
+                                                <th class="text-center">Foto</th>
+                                                <th class="text-center">Departemen</th>
+                                                <th class="text-center">Cabang</th>
+                                                <th class="text-center">Aksi</th>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                                {{ $karyawan->links('pagination::bootstrap-4') }}
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($karyawan as $k)
+                                            @php
+                                                $path = Storage::url('uploads/karyawan/'.$k->foto);
+                                            @endphp
+                                                <tr>
+                                                    <td>{{ $loop->iteration + $karyawan->firstItem()-1 }}</td>
+                                                    <td>{{ $k->nik }}</td>
+                                                    <td>{{ $k->nama_lengkap }}</td>
+                                                    <td>{{ $k->jabatan }}</td>
+                                                    <td>{{ $k->no_hp }}</td>
+                                                    <td class="text-center">
+                                                        @if (empty($k->foto))
+                                                        <img src="{{ asset('assets/img/nophoto.png') }}" class="avatar" alt="">
+                                                        @else
+                                                        <img src="{{ url($path) }}" class="avatar" alt="">
+                                                        @endif
+                                                    </td>
+                                                    <td>{{ $k->nama_dept }}</td>
+                                                    <td>{{ $k->nama_cabang }}</td>
+                                                    <td class="text-center">
+                                                        <div class="btn-group">
+                                                        <form action="/karyawan/{{ $k->nik }}/delete" method="POST" style="margin-left: 5px;">
+                                                            @csrf
+                                                            <a class="btn btn-danger btn-sm btnEdit">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eraser" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                            <path d="M19 20h-10.5l-4.21 -4.3a1 1 0 0 1 0 -1.41l10 -10a1 1 0 0 1 1.41 0l5 5a1 1 0 0 1 0 1.41l-9.2 9.3"></path>
+                                                            <path d="M18 13.3l-6.3 -6.3"></path>
+                                                            </svg>
+                                                            </a>
+                                                            <a href="/konfig/{{ $k->nik }}/setjamkerja" class="btn btn-success btn-sm">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-settings-filled" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                                    <path d="M14.647 4.081a.724 .724 0 0 0 1.08 .448c2.439 -1.485 5.23 1.305 3.745 3.744a.724 .724 0 0 0 .447 1.08c2.775 .673 2.775 4.62 0 5.294a.724 .724 0 0 0 -.448 1.08c1.485 2.439 -1.305 5.23 -3.744 3.745a.724 .724 0 0 0 -1.08 .447c-.673 2.775 -4.62 2.775 -5.294 0a.724 .724 0 0 0 -1.08 -.448c-2.439 1.485 -5.23 -1.305 -3.745 -3.744a.724 .724 0 0 0 -.447 -1.08c-2.775 -.673 -2.775 -4.62 0 -5.294a.724 .724 0 0 0 .448 -1.08c-1.485 -2.439 1.305 -5.23 3.744 -3.745a.722 .722 0 0 0 1.08 -.447c.673 -2.775 4.62 -2.775 5.294 0zm-2.647 4.919a3 3 0 1 0 0 6a3 3 0 0 0 0 -6z" stroke-width="0" fill="currentColor"></path>
+                                                                 </svg>
+                                                                </a>
+                                                            <a href="#" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editkaryawan{{ $k->nik }}">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                                <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
+                                                                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
+                                                                <path d="M16 5l3 3"></path>
+                                                                </svg>
+                                                            </a>
+                                                        </form>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {{ $karyawan->links('vendor.pagination.bootstrap-4') }}
                             </div>
                         </div>
                     </div>
@@ -163,7 +173,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <form action="/addKaryawan" method="POST" id="frmKaryawan" enctype="multipart/form-data">
+            <form action="/addKaryawan" method="post" id="frmKaryawan" enctype="multipart/form-data">
                 @csrf
                 <div class="row">
                     <div class="col-12">
@@ -182,7 +192,7 @@
                                 <path d="M19 11l0 2"></path>
                                 </svg>
                             </span>
-                            <input type="text" name="nik" class="form-control" placeholder="NIK" id="nik">
+                            <input type="text" maxlength="17" name="nik" class="form-control" placeholder="NIK" id="nik">
                         </div>
                     </div>
                 </div>
@@ -236,7 +246,7 @@
                                 <path d="M4 16h3"></path>
                                 </svg>    
                             </span>
-                            <input type="text" name="no_hp" id="no_hp" class="form-control" placeholder="No Hp">
+                            <input type="number" maxlength="15" name="no_hp" id="no_hp" class="form-control" placeholder="No Hp">
                         </div>
                     </div>
                 </div>
@@ -255,6 +265,17 @@
                             <option value="">Departemen</option>
                             @foreach ($dept as $j)
                                 <option value="{{ $j->kode_dept }}">{{ $j->nama_dept }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-12">
+                        <select name="kode_cabang" id="kode_cabang" class="form-select">
+                            <option value="">Cabang</option>
+                            @foreach ($cabang as $j)
+                                <option value="{{ $j->kode_cabang }}">{{ $j->nama_cabang }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -307,7 +328,7 @@
                                 <path d="M19 11l0 2"></path>
                                 </svg>
                             </span>
-                            <input type="text" value="{{ $k->nik }}" name="nik" class="form-control" placeholder="NIK" id="nik" readonly>
+                            <input type="number" value="{{ $k->nik }}" maxlength="17" name="nik" class="form-control" placeholder="NIK" id="nik">
                         </div>
                     </div>
                 </div>
@@ -361,7 +382,7 @@
                                 <path d="M4 16h3"></path>
                                 </svg>    
                             </span>
-                            <input type="text" value="{{ $k->no_hp }}" name="no_hp" id="no_hp" class="form-control" placeholder="No Hp">
+                            <input type="number" value="{{ $k->no_hp }}" maxlength="15" name="no_hp" id="no_hp" class="form-control" placeholder="No Hp">
                         </div>
                     </div>
                 </div>
@@ -380,6 +401,17 @@
                             <option value="{{ $k->kode_dept }}">{{ $k->nama_dept }}</option>
                             @foreach ($dept as $j)
                                 <option value="{{ $j->kode_dept }}">{{ $j->nama_dept }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-12">
+                        <select name="kode_cabang" id="kode_cabang" class="form-select">
+                            <option value="{{ $k->kode_cabang }}">{{ $k->nama_cabang }}</option>
+                            @foreach ($cabang as $j)
+                                <option value="{{ $j->kode_cabang }}">{{ $j->nama_cabang }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -410,6 +442,8 @@
 @push('myscripct')
     <script>
         $(function(){
+            
+            $('#nik').mask("00000000000000000");
             $("#btnTambah").click(function(){
                 $("#modal-inputkaryawan").modal("show");
             });
@@ -437,6 +471,7 @@
                 var jabatan = $("#jabatan").val();
                 var no_hp = $("#no_hp").val();
                 var kode_dept = $("#frmKaryawan").find("#kode_dept").val();
+                var kode_cabang = $("#frmKaryawan").find("#kode_cabang").val();
 
                 if(nik==""){
                     Swal.fire({
@@ -490,6 +525,17 @@
                     confirmButtonText: 'OK'
                     }).then((result) => {
                         $("#kode_dept").focus();
+                    });
+                    
+                    return false;
+                } else if(kode_cabang==""){
+                    Swal.fire({
+                    title: 'Warning!',
+                    text: ' Cabang Harus Diisi !!',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                    }).then((result) => {
+                        $("#kode_cabang").focus();
                     });
                     
                     return false;
@@ -555,6 +601,17 @@
                     confirmButtonText: 'OK'
                     }).then((result) => {
                         $("#kode_dept").focus();
+                    });
+                    
+                    return false;
+                } else if(kode_cabang==""){
+                    Swal.fire({
+                    title: 'Warning!',
+                    text: ' Cabang Harus Diisi !!',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                    }).then((result) => {
+                        $("#kode_cabang").focus();
                     });
                     
                     return false;

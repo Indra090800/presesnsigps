@@ -64,7 +64,7 @@
                 type: 'POST',
                 url: '/presensi/cekpengajuan',
                 data: {
-                    _token:"{ csrf_token() }",
+                    _token:"{{  csrf_token()  }}",
                     tgl_izin: tgl_izin
                 },
                 cache: false,

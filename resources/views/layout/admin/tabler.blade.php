@@ -42,7 +42,8 @@
     <script src="{{ asset('dist/libs/jsvectormap/dist/maps/world-merc.js?1674944402') }}" defer></script>
     <!-- Tabler Core -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('assets/js/lib/sweetalert.js') }}"></script>
+    <script src="{{ asset('assets/js/lib/jquery.mask.min.js') }}"></script>
     <script src="{{ asset('dist/js/tabler.min.js?1674944402') }}" defer></script>
     <script src="{{ asset('dist/js/demo.min.js?1674944402') }}" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>

@@ -17,6 +17,8 @@ class DashboardController extends Controller
         $tahunini = date("Y");
         $presensihariini = DB::table('tbl_presensi')->where('nik', $nik)->where('tgl_presensi', $hariini)->first();
         $historybulanini = DB::table('tbl_presensi')
+        ->leftJoin('jam_kerja', 'tbl_presensi.kode_jamKerja', '=', 'jam_kerja.kode_jamKerja')
+        ->where('nik', $nik)
         ->where('nik', $nik)
         ->whereRaw('MONTH(tgl_presensi)="'.$bulanini.'"')
         ->whereRaw('YEAR(tgl_presensi)="'.$tahunini.'"')
@@ -24,7 +26,8 @@ class DashboardController extends Controller
         ->get(); 
 
         $rekappresensi = DB::table('tbl_presensi')
-        ->selectRaw('COUNT(nik) as jmlhadir, SUM(IF(jam_in > "07:00",1,0)) as jmltelat')
+        ->selectRaw('COUNT(nik) as jmlhadir, SUM(IF(jam_in > jam_masuk,1,0)) as jmltelat')
+        ->leftJoin('jam_kerja', 'tbl_presensi.kode_jamKerja', '=', 'jam_kerja.kode_jamKerja')
         ->where('nik', $nik)
         ->whereRaw('MONTH(tgl_presensi)="'.$bulanini.'"')
         ->whereRaw('YEAR(tgl_presensi)="'.$tahunini.'"')
@@ -33,8 +36,8 @@ class DashboardController extends Controller
         $rekappengajuan = DB::table('tbl_pengajuan')
         ->selectRaw('SUM(IF(status="i",1,0)) as jmlizin, SUM(IF(status="s",1,0)) as jmlsakit')
         ->where('nik', $nik)
-        ->whereRaw('MONTH(tgl_izin)="'.$bulanini.'"')
-        ->whereRaw('YEAR(tgl_izin)="'.$tahunini.'"')
+        ->whereRaw('MONTH(tgl_izin_dari)="'.$bulanini.'"')
+        ->whereRaw('YEAR(tgl_izin_dari)="'.$tahunini.'"')
         ->where('status_approved', 1)
         ->first();
 
@@ -60,7 +63,7 @@ class DashboardController extends Controller
         
         $rekapizin = DB::table('tbl_pengajuan')
         ->selectRaw('SUM(IF(status="i",1,0)) as jmlizin, SUM(IF(status="s",1,0)) as jmlsakit')
-        ->where('tgl_izin', $hariini)
+        ->where('tgl_izin_dari', $hariini)
         ->where('status_approved', 1)
         ->first();
 

@@ -38,7 +38,10 @@ class DepartemenController extends Controller
             return Redirect::back()->with(['success' => 'Data Berhasil Di Simpan!!']);
         }
         } catch (\Exception $e) {
-            return Redirect::back()->with(['error' => 'Data Gagal Di Simpan!!']);
+            if($e->getCode()==23000){
+                $message = "Data Kode Dept = ".$kode_dept." Sudah Ada!!";
+            }
+            return Redirect::back()->with(['error' => 'Data Gagal Di Simpan!!'. $message]);
         }
     }
 

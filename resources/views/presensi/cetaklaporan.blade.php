@@ -155,9 +155,9 @@ function selisih($jam_masuk, $jam_keluar)
             @endif
           </td>
           <td>
-            @if ($p->jam_in > '07:00')
+            @if ($p->jam_in > $p->jam_masuk)
             @php
-               $jam_telat = selisih('07:00:00', $p->jam_in);
+               $jam_telat = selisih($p->jam_masuk, $p->jam_in);
             @endphp
                 Terlambat {{ $jam_telat }}
             @else

@@ -41,6 +41,7 @@
 
                         <div class="row mt-1">
                             <div class="col-12">
+                               <div class="table-responsive">
                                 <table class="table table-sthiped table-hover">
                                     <thead>
                                         <tr>
@@ -107,6 +108,7 @@
                                         
                                     </tbody>
                                 </table>
+                               </div>
                             </div>
                         </div>
                     </div>
@@ -208,49 +210,51 @@
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <table class="table table-sthiped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Tanggal</th>
-                                            <th>NIK</th>
-                                            <th>Nama Karyawan</th>
-                                            <th>Jabatan</th>
-                                            <th>Status</th>
-                                            <th>Keterangan</th>
-                                            <th>Status Approved</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                        @foreach ($pengajuan as $p)
-                                        <tr>
-                                            <td>{{ $loop->iteration + $pengajuan->firstItem()-1 }}</td>
-                                            <td>{{ $p->tgl_izin }}</td>
-                                            <td>{{ $p->nik }}</td>
-                                            <td>{{ $p->nama_lengkap }}</td>
-                                            <td>{{ $p->jabatan }}</td>
-                                            <td>@if ($p->status == 'i')
-                                                    Izin
-                                                @elseif ($p->status == 's')
-                                                    Sakit
-                                                @endif
-                                            </td>
-                                            <td>{{ $p->keterangan }}</td>
-                                            <td>
-                                                @if ($p->status_approved == 0)
-                                                    <a href="#" class="btn btn-warning btn-sm">Pending</a>
-                                                @elseif ($p->status_approved == 1)
-                                                    <a href="#" class="btn btn-success btn-sm">Disetujui</a>
-                                                @elseif ($p->status_approved == 2)
-                                                    <a href="#" class="btn btn-red btn-sm">Ditolak</a>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                                {{ $pengajuan->links('pagination::bootstrap-4') }}
+                                <div class="table-responsive">
+                                    <table class="table table-sthiped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Tanggal</th>
+                                                <th>NIK</th>
+                                                <th>Nama Karyawan</th>
+                                                <th>Jabatan</th>
+                                                <th>Status</th>
+                                                <th>Keterangan</th>
+                                                <th>Status Approved</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+    
+                                            @foreach ($pengajuan as $p)
+                                            <tr>
+                                                <td>{{ $loop->iteration + $pengajuan->firstItem()-1 }}</td>
+                                                <td>{{ $p->tgl_izin }}</td>
+                                                <td>{{ $p->nik }}</td>
+                                                <td>{{ $p->nama_lengkap }}</td>
+                                                <td>{{ $p->jabatan }}</td>
+                                                <td>@if ($p->status == 'i')
+                                                        Izin
+                                                    @elseif ($p->status == 's')
+                                                        Sakit
+                                                    @endif
+                                                </td>
+                                                <td>{{ $p->keterangan }}</td>
+                                                <td>
+                                                    @if ($p->status_approved == 0)
+                                                        <a href="#" class="btn btn-warning btn-sm">Pending</a>
+                                                    @elseif ($p->status_approved == 1)
+                                                        <a href="#" class="btn btn-success btn-sm">Disetujui</a>
+                                                    @elseif ($p->status_approved == 2)
+                                                        <a href="#" class="btn btn-red btn-sm">Ditolak</a>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {{ $pengajuan->links('vendor.pagination.bootstrap-4') }}
                             </div>
                         </div>
                     </div>

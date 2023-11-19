@@ -12,23 +12,76 @@ use Illuminate\Support\Facades\Storage;
 
 class PresensiController extends Controller
 {
+    public function gethari(){
+        $hari = date("D");
+
+        switch ($hari) {
+            case 'Sun':
+                $hari_ini = "Minggu";
+                break;
+            case 'Mon':
+                $hari_ini = "Senin";
+                break;
+            case 'Tue':
+                $hari_ini = "Selasa";
+                break;
+            case 'Wed':
+                $hari_ini = "Rabu";
+                break;
+            case 'Thu':
+                $hari_ini = "Kamis";
+                break;
+            case 'Fri':
+                $hari_ini = "Jumat";
+                break;
+            case 'Sat':
+                $hari_ini = "Sabtu";
+                break;
+            default:
+                # code...
+                break;
+        }
+        return $hari_ini;
+    }
+
     public function index()
     {
         $hariini = date("Y-m-d");
+        $namahari = $this->gethari();
         $nik = Auth::guard('karyawan')->user()->nik;
+        $kode_dept = Auth::guard('karyawan')->user()->kode_dept;
+        $kode_cabang = Auth::guard('karyawan')->user()->kode_cabang;
         $cek = DB::table('tbl_presensi')->where('tgl_presensi', $hariini)->where('nik', $nik)->count();
-        $lokasi_kantor = DB::table('config_lokasi')->where('id',1)->first();
-        return view('presensi.create', compact('cek', 'lokasi_kantor'));
+        $lokasi_kantor = DB::table('tbl_cabang')->where('kode_cabang',$kode_cabang)->first();
+
+        $jamkerja = DB::table('set_jamKerja')
+        ->join('jam_kerja', 'set_jamKerja.kode_jamKerja', '=', 'jam_kerja.kode_jamKerja')
+        ->where('nik', $nik)->where('hari', $namahari)->first();
+
+        if($jamkerja == null){
+            $jamkerja = DB::table('jk_dept_detail')
+            ->join('jam_kerja', 'jk_dept_detail.kode_jamKerja', '=', 'jam_kerja.kode_jamKerja')
+            ->join('jk_dept', 'jk_dept_detail.kode_jamKerja', '=', 'jk_dept.kode_jamKerja')
+            ->where('kode_dept', $kode_dept)->where('kode_cabang', $kode_cabang)->where('hari', $namahari)->first();
+        }
+
+        if($jamkerja==null){
+            return view('presensi.notifabsen');
+        }else{
+            return view('presensi.create', compact('cek', 'lokasi_kantor', 'jamkerja'));
+        }
     }
 
     public function store(Request $request)
     {
         $nik = Auth::guard('karyawan')->user()->nik;
+        $namahari = $this->gethari();
         $tgl_presensi = date("Y-m-d");
         $jam = date("H:i:s");
-        $lokasi_kantor = DB::table('config_lokasi')->where('id',1)->first();
-        $lok = explode(",", $lokasi_kantor->lokasi);
-        $latitudekantor = $lok[0];  
+        $kode_cabang = Auth::guard('karyawan')->user()->kode_cabang;
+        $lokasi_kantor = DB::table('tbl_cabang')->where('kode_cabang',$kode_cabang)->first();
+        $lok = explode(",", $lokasi_kantor->lokasi_cabang);
+        $latitudekantor = $lok[0];
         $longitudekantor = $lok[1];
         $lokasi = $request->lokasi;
         $lokasi_user = explode(",", $lokasi);
@@ -39,6 +92,9 @@ class PresensiController extends Controller
         $radius = round($jarak["meters"]);
 
         $cek = DB::table('tbl_presensi')->where('tgl_presensi', $tgl_presensi)->where('nik', $nik)->count();
+        $jamkerja = DB::table('set_jamKerja')
+        ->join('jam_kerja', 'set_jamKerja.kode_jamKerja', '=', 'jam_kerja.kode_jamKerja')
+        ->where('nik', $nik)->where('hari', $namahari)->first();
 
         if($cek > 0){
             $ket = "out";
@@ -52,37 +108,48 @@ class PresensiController extends Controller
         $image_base64 = base64_decode($image_parts[1]);
         $fileName = $formatName . ".png";
         $file = $folderPath . $fileName;
-         
-        if($radius > $lokasi_kantor->radius){
+
+        if($radius > $lokasi_kantor->radius_cabang){
             echo "error|Maaf, Anda diluar jangkauan radius ".$radius."meter dari kantor|radius";
         }else{
             if($cek > 0){
-                $data_pulang = [
-                    'jam_out'       => $jam,
-                    'foto_out'      => $fileName,
-                    'lokasi_out'    => $lokasi
-                ]; 
-                $update = DB::table('tbl_presensi')->where('tgl_presensi', $tgl_presensi)->where('nik', $nik)->update($data_pulang);
-                if($update){
-                    echo "success|Terima Kasih, Selamat Beristirahat|out";
-                    Storage::put($file, $image_base64); 
+                if($jam < $jamkerja->jam_pulang){
+                    echo "error|Maaf Anda Belum Bisa Absen, Silahkan Lihat Jam Pulang Absen|in";
                 }else{
-                    echo "error|Maaf Gagal Absen, Silahkan Hubungi IT|out";
+                    $data_pulang = [
+                        'jam_out'       => $jam,
+                        'foto_out'      => $fileName,
+                        'lokasi_out'    => $lokasi
+                    ];
+                    $update = DB::table('tbl_presensi')->where('tgl_presensi', $tgl_presensi)->where('nik', $nik)->update($data_pulang);
+                    if($update){
+                        echo "success|Terima Kasih, Selamat Beristirahat|out";
+                        Storage::put($file, $image_base64);
+                    }else{
+                        echo "error|Maaf Gagal Absen, Silahkan Hubungi IT|out";
+                    }
                 }
             }else{
-                $data = [
-                    'nik'          => $nik,
-                    'tgl_presensi' => $tgl_presensi,
-                    'jam_in'       => $jam,
-                    'foto_in'      => $fileName,
-                    'lokasi_in'    => $lokasi
-                ]; 
-                $simpan = DB::table('tbl_presensi')->insert($data);
-                if($simpan){
-                    echo "success|Terima Kasih, Selamat Gawe, Utamakan Keselamatan Kerja ya|in";
-                    Storage::put($file, $image_base64); 
+                if($jam < $jamkerja->awal_jam_in){
+                    echo "error|Maaf Anda Belum Bisa Absen, Silahkan Lihat Jam Masuk Absen|in";
+                }else if ($jam > $jamkerja->akhir_jam_in){
+                    echo "error|Maaf Anda Gagal Absen, Silahkan Lihat Jam Akhir Absen|in";
                 }else{
-                    echo "error|Maaf Gagal Absen, Silahkan Hubungi IT|in";
+                    $data = [
+                        'nik'          => $nik,
+                        'tgl_presensi' => $tgl_presensi,
+                        'jam_in'       => $jam,
+                        'foto_in'      => $fileName,
+                        'lokasi_in'    => $lokasi,
+                        'kode_jamKerja'=> $jamkerja->kode_jamKerja
+                    ];
+                    $simpan = DB::table('tbl_presensi')->insert($data);
+                    if($simpan){
+                        echo "success|Terima Kasih, Selamat Gawe, Utamakan Keselamatan Kerja ya|in";
+                        Storage::put($file, $image_base64);
+                    }else{
+                        echo "error|Maaf Gagal Absen, Silahkan Hubungi IT|in";
+                    }
                 }
             }
         }
@@ -119,6 +186,10 @@ class PresensiController extends Controller
 
         $karyawan = DB::table('tbl_karyawan')->where('nik', $nik)->first();
         $old_foto = $karyawan->foto;
+
+        $request->validate([
+            'foto' => 'required|image|mimes:png,jpg,jpeg|max:1024',
+        ]);
 
         if($request->hasFile('foto')){
             $foto = $nik.".".$request->file('foto')->getClientOriginalExtension();
@@ -178,7 +249,9 @@ class PresensiController extends Controller
     public function izin()
     {
         $nik = Auth::guard('karyawan')->user()->nik;
-        $dataizin = DB::table('tbl_pengajuan')->where('nik', $nik)->get();
+        $dataizin = DB::table('tbl_pengajuan')
+        ->leftJoin('tbl_cuti', 'tbl_pengajuan.kode_cuti', '=', 'tbl_cuti.kode_cuti')
+        ->where('nik', $nik)->get();
 
         return view('presensi.izin', compact('dataizin'));
     }
@@ -220,9 +293,10 @@ class PresensiController extends Controller
     {
         $tanggal = $request->tanggal;
         $presensi = DB::table('tbl_presensi')
-        ->select('tbl_presensi.*', 'nama_lengkap', 'nama_dept')
-        ->join('tbl_karyawan', 'tbl_presensi.nik', '=', 'tbl_karyawan.nik')
-        ->join('tbl_dept', 'tbl_karyawan.kode_dept', '=', 'tbl_dept.kode_dept')
+        ->select('tbl_presensi.*', 'nama_lengkap', 'nama_dept', 'jam_masuk', 'nama_jamKerja', 'jam_pulang')
+        ->leftJoin('tbl_karyawan', 'tbl_presensi.nik', '=', 'tbl_karyawan.nik')
+        ->leftJoin('tbl_dept', 'tbl_karyawan.kode_dept', '=', 'tbl_dept.kode_dept')
+        ->leftJoin('jam_kerja', 'tbl_presensi.kode_jamKerja', '=', 'jam_kerja.kode_jamKerja')
         ->where('tgl_presensi', $tanggal)
         ->get();
 
@@ -254,20 +328,28 @@ class PresensiController extends Controller
         ->join('tbl_dept', 'tbl_karyawan.kode_dept', '=', 'tbl_dept.kode_dept')
         ->first();
         $namabulan = ["","Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-        
+
         $presensi = DB::table('tbl_presensi')
+        ->leftJoin('jam_kerja', 'tbl_presensi.kode_jamKerja', '=', 'jam_kerja.kode_jamKerja')
         ->where('nik', $nik)
         ->whereRaw('MONTH(tgl_presensi)="'.$bulan.'"')
         ->whereRaw('YEAR(tgl_presensi)="'.$tahun.'"')
         ->orderBy('tgl_presensi')
         ->get();
+        if(isset($_POST['excel'])){
+            $time = date("d-M-Y H:i:s");
+
+            header("Content-type: application/vnd-ms-excel");
+            header("Content-Disposition: attachment; filename=Rekap-Laporan-Presensi-$nik-$time.xls");
+            return view('presensi.cetaklaporan1', compact('bulan','tahun','namabulan', 'karyawan', 'presensi'));
+        }
         return view('presensi.cetaklaporan', compact('bulan','tahun','namabulan', 'karyawan', 'presensi'));
     }
 
     public function rekappresensi()
     {
         $namabulan = ["","Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-        
+
         return view('presensi.rekappresensi', compact('namabulan',));
     }
 
@@ -277,46 +359,54 @@ class PresensiController extends Controller
         $tahun = $request->tahun;
 
         $rekap = DB::table('tbl_presensi')
-        ->selectRaw('tbl_presensi.nik, nama_lengkap,
-            MAX(IF(DaY(tgl_presensi) = 1,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_1,
-            MAX(IF(DaY(tgl_presensi) = 2,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_2,
-            MAX(IF(DaY(tgl_presensi) = 3,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_3,
-            MAX(IF(DaY(tgl_presensi) = 4,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_4,
-            MAX(IF(DaY(tgl_presensi) = 5,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_5,
-            MAX(IF(DaY(tgl_presensi) = 6,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_6,
-            MAX(IF(DaY(tgl_presensi) = 7,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_7,
-            MAX(IF(DaY(tgl_presensi) = 8,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_8,
-            MAX(IF(DaY(tgl_presensi) = 9,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_9,
-            MAX(IF(DaY(tgl_presensi) = 10,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_10,
-            MAX(IF(DaY(tgl_presensi) = 11,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_11,
-            MAX(IF(DaY(tgl_presensi) = 12,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_12,
-            MAX(IF(DaY(tgl_presensi) = 13,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_13,
-            MAX(IF(DaY(tgl_presensi) = 14,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_14,
-            MAX(IF(DaY(tgl_presensi) = 15,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_15,
-            MAX(IF(DaY(tgl_presensi) = 16,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_16,
-            MAX(IF(DaY(tgl_presensi) = 17,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_17,
-            MAX(IF(DaY(tgl_presensi) = 18,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_18,
-            MAX(IF(DaY(tgl_presensi) = 19,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_19,
-            MAX(IF(DaY(tgl_presensi) = 20,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_20,
-            MAX(IF(DaY(tgl_presensi) = 21,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_21,
-            MAX(IF(DaY(tgl_presensi) = 22,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_22,
-            MAX(IF(DaY(tgl_presensi) = 23,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_23,
-            MAX(IF(DaY(tgl_presensi) = 24,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_24,
-            MAX(IF(DaY(tgl_presensi) = 25,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_25,
-            MAX(IF(DaY(tgl_presensi) = 26,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_26,
-            MAX(IF(DaY(tgl_presensi) = 27,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_27,
-            MAX(IF(DaY(tgl_presensi) = 28,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_28,
-            MAX(IF(DaY(tgl_presensi) = 29,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_29,
-            MAX(IF(DaY(tgl_presensi) = 30,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_30,
-            MAX(IF(DaY(tgl_presensi) = 31,CONCAT(jam_in, "-", IFNULL(jam_out,"00:00:00")), "")) as tgl_31')
+        ->selectRaw('tbl_presensi.nik, nama_lengkap,jam_masuk,jam_pulang,
+            MAX(IF(DaY(tgl_presensi) = 1,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_1,
+            MAX(IF(DaY(tgl_presensi) = 2,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_2,
+            MAX(IF(DaY(tgl_presensi) = 3,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_3,
+            MAX(IF(DaY(tgl_presensi) = 4,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_4,
+            MAX(IF(DaY(tgl_presensi) = 5,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_5,
+            MAX(IF(DaY(tgl_presensi) = 6,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_6,
+            MAX(IF(DaY(tgl_presensi) = 7,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_7,
+            MAX(IF(DaY(tgl_presensi) = 8,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_8,
+            MAX(IF(DaY(tgl_presensi) = 9,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_9,
+            MAX(IF(DaY(tgl_presensi) = 10,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_10,
+            MAX(IF(DaY(tgl_presensi) = 11,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_11,
+            MAX(IF(DaY(tgl_presensi) = 12,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_12,
+            MAX(IF(DaY(tgl_presensi) = 13,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_13,
+            MAX(IF(DaY(tgl_presensi) = 14,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_14,
+            MAX(IF(DaY(tgl_presensi) = 15,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_15,
+            MAX(IF(DaY(tgl_presensi) = 16,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_16,
+            MAX(IF(DaY(tgl_presensi) = 17,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_17,
+            MAX(IF(DaY(tgl_presensi) = 18,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_18,
+            MAX(IF(DaY(tgl_presensi) = 19,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_19,
+            MAX(IF(DaY(tgl_presensi) = 20,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_20,
+            MAX(IF(DaY(tgl_presensi) = 21,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_21,
+            MAX(IF(DaY(tgl_presensi) = 22,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_22,
+            MAX(IF(DaY(tgl_presensi) = 23,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_23,
+            MAX(IF(DaY(tgl_presensi) = 24,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_24,
+            MAX(IF(DaY(tgl_presensi) = 25,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_25,
+            MAX(IF(DaY(tgl_presensi) = 26,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_26,
+            MAX(IF(DaY(tgl_presensi) = 27,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_27,
+            MAX(IF(DaY(tgl_presensi) = 28,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_28,
+            MAX(IF(DaY(tgl_presensi) = 29,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_29,
+            MAX(IF(DaY(tgl_presensi) = 30,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_30,
+            MAX(IF(DaY(tgl_presensi) = 31,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_31')
         ->join('tbl_karyawan', 'tbl_presensi.nik', '=', 'tbl_karyawan.nik')
+        ->leftJoin('jam_kerja', 'tbl_presensi.kode_jamKerja', '=', 'jam_kerja.kode_jamKerja')
         ->whereRaw('MONTH(tgl_presensi)="'.$bulan.'"')
         ->whereRaw('YEAR(tgl_presensi)="'.$tahun.'"')
-        ->groupByRaw('tbl_presensi.nik, nama_lengkap')
+        ->groupByRaw('tbl_presensi.nik, nama_lengkap, jam_masuk, jam_pulang')
         ->get();
 
+        if(isset($_POST['excel'])){
+            $time = date("d-M-Y H:i:s");
+
+            header("Content-type: application/vnd-ms-excel");
+            header("Content-Disposition: attachment; filename=Rekap Presensi $time.xls");
+        }
+
         $namabulan = ["","Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-        
+
         return view('presensi.rekap', compact('rekap', 'namabulan', 'bulan', 'tahun'));
     }
 
@@ -333,7 +423,7 @@ class PresensiController extends Controller
         $query->select('id_izin', 'tgl_izin', 'tbl_pengajuan.nik', 'nama_lengkap', 'jabatan', 'status', 'keterangan', 'status_approved');
         $query->join('tbl_karyawan', 'tbl_pengajuan.nik', '=', 'tbl_karyawan.nik');
         if(!empty($dari) && !empty($sampai)){
-         $query->whereBetween('tgl_izin', [$dari, $sampai]);   
+         $query->whereBetween('tgl_izin', [$dari, $sampai]);
         }
 
         if(!empty($nik)){

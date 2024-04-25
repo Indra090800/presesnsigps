@@ -77,7 +77,7 @@
                     $status = "Cuti";
                 }
             @endphp
-            <div class="card mt-1">
+            <div class="card mt-1 card_izin" kode_izin="{{ $h->id_izin }}" data-toggle="modal" data-target="#actionSheetIconed">
                 <div class="card-body">
                     <div class="historycontent">
                         <div class="iconpresensi">
@@ -136,7 +136,6 @@
                                 <span class="badge bg-danger">Denied</span>
                             @endif
                             <p style="margin-top: 5px; font-weight: bold;">{{ hitunghari($h->tgl_izin_dari, $h->tgl_izin_sampai) }} hari</p>
-                            <a href="" class="btn btn-warning btn-sm"><ion-icon name="create-outline"></ion-icon></a> <a href="" class="btn btn-danger btn-sm"><ion-icon name="trash-outline"></ion-icon></a>
                         </div>
                     </div>
                 </div>
@@ -165,5 +164,28 @@
         </div>
     </div>
 
+    <div class="modal fade action-sheet" id="actionSheetIconed" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Aksi</h5>
+                </div>
+                <div class="modal-body" id="showact">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
+@push('myscript')
+    <script>
+        $(function(){
+            $(".card_izin").click(function(e){
+                var kode_izin = $(this).attr("kode_izin");
+                $("#showact").load('/izin/' + kode_izin + '/showact');
+            });
+        });
+    </script>
+@endpush

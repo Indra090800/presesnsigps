@@ -54,4 +54,38 @@ class Izincuti extends Controller
             return redirect('/presensi/izin')->with(['error' => 'Data Gagal Di Ajukan!!']);;
         }
     }
+
+    public function vEdit($id_izin){
+        $jcuti = DB::table('tbl_cuti')->get();
+        $ic = DB::table('tbl_pengajuan')
+        ->leftJoin('tbl_cuti', 'tbl_pengajuan.kode_cuti', '=', 'tbl_cuti.kode_cuti')
+        ->where('id_izin', $id_izin)->first();
+        return view('absen.vicEdit', compact('jcuti', 'ic'));
+    }
+
+    public function fEdit(Request $request, $id_izin){
+        $dari = $request->tgl_izin_dari;
+        $sampai = $request->tgl_izin_sampai;
+        $keterangan = $request->keterangan;
+        $nik = Auth::guard('karyawan')->user()->nik;
+        $status = $request->status;
+        $kode_cuti = $request->kode_cuti;
+
+        $data = [
+            'nik'             => $nik,
+            'tgl_izin_dari'   => $dari,
+            'tgl_izin_sampai' => $sampai,
+            'status'          => $status,
+            'keterangan'      => $keterangan,
+            'kode_cuti'       => $kode_cuti,
+            'status_approved' => 0
+        ];
+        $izin = DB::table('tbl_pengajuan')->where('id_izin', $id_izin)->update($data);
+
+        if($izin){
+            return redirect('/presensi/izin')->with(['success' => 'Data Berhasil Di Edit!!']);
+        }else{
+            return redirect('/presensi/izin')->with(['error' => 'Data Gagal Di Edit!!']);;
+        }
+    }
 }

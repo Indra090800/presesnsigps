@@ -19,7 +19,7 @@ class IzinSakit extends Controller
         $keterangan = $request->keterangan;
         $nik = Auth::guard('karyawan')->user()->nik;
         $status = $request->status;
-        $sudok = $request->sid;
+        $sid = $request->sid;
 
         if ($request->hasFile('sid')) {
             $sid = "sid-".$nik . "." . $request->file('sid')->getClientOriginalExtension();
@@ -47,7 +47,7 @@ class IzinSakit extends Controller
             'tgl_izin_sampai' => $sampai,
             'status'          => $status,
             'keterangan'      => $keterangan,
-            'sid'             => $sudok,
+            'sid'             => $sid,
             'status_approved' => 0
         ];
         $izin = DB::table('tbl_pengajuan')->insert($data);
@@ -62,5 +62,10 @@ class IzinSakit extends Controller
         }else{
             return redirect('/presensi/izin')->with(['error' => 'Data Gagal Di Ajukan!!']);;
         }
+    }
+
+    public function vEdit($id_izin){
+        $is = DB::table('tbl_pengajuan')->where('id_izin', $id_izin)->first();
+        return view('absen.visEdit', compact('is'));
     }
 }

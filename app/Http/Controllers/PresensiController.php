@@ -482,4 +482,9 @@ class PresensiController extends Controller
         $cek = DB::table('tbl_pengajuan')->where('nik', $nik)->where('tgl_izin', $tgl_izin)->count();
         return $cek;
     }
+
+    public function showact($kode_izin){
+        $wIzin = DB::table('tbl_pengajuan')->where('id_izin', $kode_izin)->first();
+        return view('absen.showact', compact('wIzin'));
+    }
 }

@@ -48,7 +48,7 @@ class KonfigurasiController extends Controller
         $jam_in = $request->jam_in;
         $akhir_jam_in = $request->akhir_jam_in;
         $jam_pulang = $request->jam_pulang;
-        
+
         try {
             $data = [
                 'kode_jamKerja'   => $kode_jamKerja,
@@ -102,7 +102,7 @@ class KonfigurasiController extends Controller
         if($delete){
             return Redirect::back()->with(['success' => 'Data Berhasil Di Delete!!']);
         }else{
-            return Redirect::back()->with(['error' => 'Data Gagal Di Delete!!']); 
+            return Redirect::back()->with(['error' => 'Data Gagal Di Delete!!']);
         }
     }
 
@@ -127,7 +127,7 @@ class KonfigurasiController extends Controller
         $hari = $request->hari;
         $kode_jamKerja = $request->kode_jamKerja;
 
-        for ($i=0; $i < count($hari); $i++) { 
+        for ($i=0; $i < count($hari); $i++) {
             $data[] = [
                 'nik'             => $nik,
                 'hari'            => $hari[$i],
@@ -139,7 +139,7 @@ class KonfigurasiController extends Controller
             SetJamKerja::insert($data);
             return Redirect('/karyawan')->with(['success' => 'Data Jam Kerja Berhasil Di Simpan!!']);
         } catch (\Exception $e) {
-            return Redirect('/karyawan')->with(['error' => 'Data Jam Kerja Gagal Di Simpan!!']); 
+            return Redirect('/karyawan')->with(['error' => 'Data Jam Kerja Gagal Di Simpan!!']);
         }
     }
 
@@ -148,13 +148,14 @@ class KonfigurasiController extends Controller
         $hari = $request->hari;
         $kode_jamKerja = $request->kode_jamKerja;
 
-        for ($i=0; $i < count($hari); $i++) { 
+        for ($i=0; $i < count($hari); $i++) {
             $data[] = [
                 'nik'             => $nik,
                 'hari'            => $hari[$i],
                 'kode_jamKerja'   => $kode_jamKerja[$i],
             ];
         }
+        dd($hari);
 
         DB::beginTransaction();
         try {
@@ -164,7 +165,7 @@ class KonfigurasiController extends Controller
             return Redirect('/karyawan')->with(['success' => 'Data Jam Kerja Berhasil Di Update!!']);
         } catch (\Exception $e) {
             DB::rollBack();
-            return Redirect('/karyawan')->with(['error' => 'Data Jam Kerja Gagal Di Simpan!!']); 
+            return Redirect('/karyawan')->with(['error' => 'Data Jam Kerja Gagal Di Simpan!!']);
         }
     }
 
@@ -208,7 +209,7 @@ class KonfigurasiController extends Controller
                 'kode_cabang'     => $kode_cabang,
                 'kode_dept'       => $kode_dept,
             ]);
-            for ($i=0; $i < count($hari); $i++) { 
+            for ($i=0; $i < count($hari); $i++) {
                 $data[] = [
                     'kode_jk_dept'    => $kode_jk_dept,
                     'hari'            => $hari[$i],
@@ -225,7 +226,7 @@ class KonfigurasiController extends Controller
             }else {
                 $message = "Hubungi Tim IT";
             }
-            return Redirect('/configurasi/jam-kerjaDep')->with(['error' => $message]); 
+            return Redirect('/configurasi/jam-kerjaDep')->with(['error' => $message]);
         }
     }
 
@@ -258,7 +259,7 @@ class KonfigurasiController extends Controller
                 'kode_cabang'     => $kode_cabang,
                 'kode_dept'       => $kode_dept,
             ]);
-            for ($i=0; $i < count($hari); $i++) { 
+            for ($i=0; $i < count($hari); $i++) {
                 $data[] = [
                     'kode_jk_dept'    => $kode_jk_dept,
                     'hari'            => $hari[$i],
@@ -271,7 +272,7 @@ class KonfigurasiController extends Controller
             return Redirect('/configurasi/jam-kerjaDep')->with(['success' => 'Data Jam Kerja Departemen Berhasil Di Update!!']);
         } catch (\Exception $e) {
             DB::rollBack();
-            return Redirect('/configurasi/jam-kerjaDep')->with(['error' => 'Data Jam Kerja Departemen Gagal Di Update!!']); 
+            return Redirect('/configurasi/jam-kerjaDep')->with(['error' => 'Data Jam Kerja Departemen Gagal Di Update!!']);
         }
     }
 
@@ -281,7 +282,7 @@ class KonfigurasiController extends Controller
             DB::table('jk_dept_detail')->where('kode_jk_dept',$kode_jk_dept)->delete();
             return Redirect::back()->with(['success' => 'Data Berhasil Di Delete!!']);
         }else{
-            return Redirect::back()->with(['error' => 'Data Gagal Di Delete!!']); 
+            return Redirect::back()->with(['error' => 'Data Gagal Di Delete!!']);
         }
     }
 }

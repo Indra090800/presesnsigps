@@ -64,12 +64,21 @@ Route::middleware(['auth:karyawan'])->group(function(){
 
     Route::get('/izinabsen', [IzinAbsen::class, 'index']);
     Route::post('/izinabsen/create', [IzinAbsen::class, 'create']);
+    Route::get('/izinabsen/{id_izin}/edit', [IzinAbsen::class, 'vEdit']);
+    Route::post('/izinabsen/{id_izin}/fedit', [IzinAbsen::class, 'fEdit']);
 
     Route::get('/izinsakit', [IzinSakit::class, 'index']);
     Route::post('/izinsakit/create', [IzinSakit::class, 'create']);
+    Route::get('/izinsakit/{id_izin}/edit', [IzinSakit::class, 'vEdit']);
+    Route::post('/izinsakit/{id_izin}/fedit', [IzinSakit::class, 'fEdit']);
 
     Route::get('/izincuti', [Izincuti::class, 'index']);
     Route::post('/izincuti/create', [Izincuti::class, 'create']);
+    Route::get('/izincuti/{id_izin}/edit', [Izincuti::class, 'vEdit']);
+    Route::post('/izincuti/{id_izin}/fedit', [Izincuti::class, 'fEdit']);
+
+    Route::get('/izin/{kode_izin}/showact', [PresensiController::class, 'showact']);
+    Route::post('/deleteizin/{id_izin}', [PresensiController::class, 'showact']);
 });
 
 Route::middleware(['auth:user'])->group(function(){

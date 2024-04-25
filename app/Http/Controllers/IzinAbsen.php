@@ -48,4 +48,32 @@ class IzinAbsen extends Controller
             return redirect('/presensi/izin')->with(['error' => 'Data Gagal Di Ajukan!!']);;
         }
     }
+
+    public function vEdit($id_izin){
+        $izin = DB::table('tbl_pengajuan')->where('id_izin', $id_izin)->first();
+        return view('absen.viEdit', compact('izin'));
+    }
+
+    public function fEdit(Request $request, $id_izin){
+        $dari = $request->tgl_izin_dari;
+        $sampai = $request->tgl_izin_sampai;
+        $keterangan = $request->keterangan;
+        $nik = Auth::guard('karyawan')->user()->nik;
+        $status = $request->status;
+        $data = [
+            'nik'             => $nik,
+            'tgl_izin_dari'   => $dari,
+            'tgl_izin_sampai' => $sampai,
+            'status'          => $status,
+            'keterangan'      => $keterangan,
+            'status_approved' => 0
+        ];
+        $izin = DB::table('tbl_pengajuan')->where('id_izin', $id_izin)->update($data);
+
+        if($izin){
+            return redirect('/presensi/izin')->with(['success' => 'Data Berhasil Di Simpan!!']);
+        }else{
+            return redirect('/presensi/izin')->with(['error' => 'Data Gagal Di Simpan!!']);;
+        }
+    }
 }

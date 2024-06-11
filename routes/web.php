@@ -11,6 +11,7 @@ use App\Http\Controllers\IzinSakit;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KonfigurasiController;
 use App\Http\Controllers\PresensiController;
+use App\Http\Controllers\TiketController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 
@@ -25,14 +26,14 @@ use Illuminate\Support\Facades\Storage;
 |
 */
 
-Route::middleware(['guest:karyawan'])->group(function(){
+Route::middleware(['guest:karyawan'])->group(function () {
     Route::get('/', function () {
         return view('auth.login');
     })->name('login');
     Route::post('/proseslogin', [AuthController::class, 'proseslogin']);
 });
 
-Route::middleware(['guest:user'])->group(function(){
+Route::middleware(['guest:user'])->group(function () {
     Route::get('/panel', function () {
         return view('auth.loginadmin');
     })->name('loginadmin');
@@ -41,7 +42,7 @@ Route::middleware(['guest:user'])->group(function(){
 });
 
 
-Route::middleware(['auth:karyawan'])->group(function(){
+Route::middleware(['auth:karyawan'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
     Route::get('/proseslogout', [AuthController::class, 'proseslogout']);
 
@@ -78,10 +79,13 @@ Route::middleware(['auth:karyawan'])->group(function(){
     Route::post('/izincuti/{id_izin}/fedit', [Izincuti::class, 'fEdit']);
 
     Route::get('/izin/{kode_izin}/showact', [PresensiController::class, 'showact']);
-    Route::post('/deleteizin/{id_izin}', [PresensiController::class, 'showact']);
+    Route::get('/deleteizin/{id_izin}', [PresensiController::class, 'deleteizin']);
+
+    Route::get('/ticket_qurban', [TiketController::class, 'index']);
+    Route::post('/validasi', [TiketController::class, 'validasi']);
 });
 
-Route::middleware(['auth:user'])->group(function(){
+Route::middleware(['auth:user'])->group(function () {
     Route::get('panel/dashboardadmin', [DashboardController::class, 'dashboardadmin']);
     Route::get('/proseslogoutadmin', [AuthController::class, 'proseslogoutadmin']);
 
@@ -137,4 +141,3 @@ Route::middleware(['auth:user'])->group(function(){
     Route::post('/konfig/jamKerjaDept/{kode_jk_dept}/editJkDept', [KonfigurasiController::class, 'editJkDept']);
     Route::post('/konfig/jamKerjaDept/{kode_jk_dept}/deleteJkDept', [KonfigurasiController::class, 'deleteJkDept']);
 });
-

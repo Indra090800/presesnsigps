@@ -82,7 +82,7 @@ Route::middleware(['auth:karyawan'])->group(function () {
     Route::get('/deleteizin/{id_izin}', [PresensiController::class, 'deleteizin']);
 
     Route::get('/ticket_qurban', [TiketController::class, 'index']);
-    Route::post('/validasi', [TiketController::class, 'validasi']);
+    Route::post('/validasi', [TiketController::class, 'validasi'])->name('validasi');
 });
 
 Route::middleware(['auth:user'])->group(function () {

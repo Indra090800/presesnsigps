@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-12">
+                <div class="col-12 ml-1">
                     <form action="/tukarkan_kupon" method="POST">
                         @csrf
                         <div class="row">

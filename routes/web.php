@@ -83,6 +83,7 @@ Route::middleware(['auth:karyawan'])->group(function () {
 
     Route::get('/ticket_qurban', [TiketController::class, 'index']);
     Route::post('/validasi', [TiketController::class, 'validasi'])->name('validasi');
+    Route::post('/tukarkan_kupon', [TiketController::class, 'tukarkan_kupon']);
 });
 
 Route::middleware(['auth:user'])->group(function () {

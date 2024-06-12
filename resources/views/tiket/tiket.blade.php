@@ -15,28 +15,28 @@
 @section('content')
     <div class="row" style="margin-top: 70px;">
         <div class="col">
-            @php
-                $messagesuccess = Session::get('success');
-                $messageerror = Session::get('error');
-            @endphp
-            @if (Session::get('success'))
-                <div class="alert alert-outline-success">
-                    {{ $messagesuccess }}
-                </div>
-            @else
-                <div class="alert alert-outline-error">
-                    {{ $messageerror }}
-                </div>
-            @endif
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
             <div class="row">
                 <div class="col-12">
                     <div id="reader" width="600px"></div>
                 </div>
-                <input type="text" id="result" name="result">
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <form action="/tukarkan_kupon" method="POST">
+                        @csrf
+                        <div class="row">
+                            <label for="">Kode QR</label>
+                            <input type="text" id="result" name="result" class="form-control">
+                        </div>
+                        <div class="row">
+                            <label for="">Nama Penerima</label>
+                            <input type="text" name="nama" class="form-control" required>
+                        </div>
+                        <div class="row mt-2">
+                            <button class="btn btn-primary w-100">Tukarkan</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

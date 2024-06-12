@@ -52,7 +52,7 @@
         @yield('content')
     </div>
     <!-- * App Capsule -->
-
+    @include('sweetalert::alert')
     @include('layout.bottomNavigation')
 
     @include('layout.script')

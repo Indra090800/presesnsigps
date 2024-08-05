@@ -38,8 +38,8 @@
 
 <script>
     $(function() {
-                $('#deletebutton').click(function(e) {
-                        $('#hapuspengajuan').attr('href', 'deleteizin/' + '{{ $wIzin->id_izin }}')
-                    }
-                })
+        $('#deletebutton').click(function(e) {
+            $('#hapuspengajuan').attr('href', '/deleteizin/' + '{{ $wIzin->id_izin }}')
+        });
+    });
 </script>

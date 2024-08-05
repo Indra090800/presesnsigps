@@ -247,18 +247,28 @@ class PresensiController extends Controller
         return view('presensi.gethistori', compact('histori'));
     }
 
-    public function izin()
+    public function izin(Request $request)
     {
         $nik = Auth::guard('karyawan')->user()->nik;
-        $dataizin = DB::table('tbl_pengajuan')
-            ->leftJoin('tbl_cuti', 'tbl_pengajuan.kode_cuti', '=', 'tbl_cuti.kode_cuti')
-            ->where('nik', $nik)->get();
+        $bulan = $request->bulan;
+        $tahun = $request->tahun;
 
-        if ($dataizin == null) {
-            return view('presensi.nullizin');
+        if (!empty($request->tahun) && !empty($request->bulan)) {
+            $dataizin = DB::table('tbl_pengajuan')
+                ->orderBy('tgl_izin_dari', 'desc')
+                ->leftJoin('tbl_cuti', 'tbl_pengajuan.kode_cuti', '=', 'tbl_cuti.kode_cuti')
+                ->whereRaw('MONTH(tgl_izin_dari)="' . $bulan . '"')
+                ->whereRaw('YEAR(tgl_izin_dari)="' . $tahun . '"')
+                ->where('nik', $nik)->get();
         } else {
-            return view('presensi.izin', compact('dataizin'));
+            $dataizin = DB::table('tbl_pengajuan')
+                ->orderBy('tgl_izin_dari', 'desc')
+                ->leftJoin('tbl_cuti', 'tbl_pengajuan.kode_cuti', '=', 'tbl_cuti.kode_cuti')
+                ->where('nik', $nik)->limit(5)->orderBy('tgl_izin_dari', 'desc')
+                ->get();
         }
+        $namabulan = ["", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        return view('presensi.izin', compact('dataizin', 'namabulan'));
     }
 
     public function buatizin()

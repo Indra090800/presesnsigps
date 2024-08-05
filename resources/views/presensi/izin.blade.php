@@ -32,6 +32,50 @@
     </div>
     <div class="row">
         <div class="col">
+            <form action="/presensi/izin" method="get">
+                <div class="row">
+                    <div class="col-8">
+                        <div class="form-group">
+                            <select name="bulan" id="bulan" class="form-control selectmaterialize">
+                                <option value="">Bulan</option>
+                                @for ($i = 1; $i <= 12; $i++)
+                                    <option value="{{ $i }}" {{ date('m') == $i ? 'selected' : '' }}>
+                                        {{ $namabulan[$i] }}
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <select name="tahun" id="tahun" class="form-control selectmaterialize">
+                                <option value="">Tahun</option>
+                                @php
+                                    $thnmulai = 2021;
+                                    $thnnow = date('Y');
+                                @endphp
+                                @for ($tahun = $thnmulai; $tahun <= $thnnow; $tahun++)
+                                    <option value="{{ $tahun }}" {{ date('Y') == $tahun ? 'selected' : '' }}>
+                                        {{ $tahun }}</option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <button class="btn btn-primary btn-block">
+                                <ion-icon name="search-outline"></ion-icon> Search
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
             @foreach ($dataizin as $h)
                 {{-- <ul class="listview image-listview">
                 <li>
@@ -172,7 +216,8 @@
         </a>
         <div class="dropdown-menu">
             <a href="/izinabsen" class="dropdown-item bg-primary">
-                <ion-icon name="document-outline" role="img" aria-label="image outline" class="md hydrated"></ion-icon>
+                <ion-icon name="document-outline" role="img" aria-label="image outline"
+                    class="md hydrated"></ion-icon>
                 <p>Izin Absen</p>
             </a>
             <a href="/izinsakit" class="dropdown-item bg-primary">

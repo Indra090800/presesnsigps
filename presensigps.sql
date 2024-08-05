@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Waktu pembuatan: 25 Apr 2024 pada 19.40
--- Versi server: 10.4.28-MariaDB
--- Versi PHP: 8.2.4
+-- Host: 127.0.0.1
+-- Waktu pembuatan: 14 Jun 2024 pada 05.06
+-- Versi server: 10.4.32-MariaDB
+-- Versi PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -80,8 +80,7 @@ CREATE TABLE `jk_dept` (
 --
 
 INSERT INTO `jk_dept` (`kode_jk_dept`, `kode_cabang`, `kode_dept`) VALUES
-('JDPKIT', 'DPK', 'IT'),
-('JTSMIT', 'TSM', 'IT');
+('JDPKIT', 'DPK', 'IT');
 
 -- --------------------------------------------------------
 
@@ -103,17 +102,10 @@ INSERT INTO `jk_dept_detail` (`kode_jk_dept`, `hari`, `kode_jamKerja`) VALUES
 ('JDPKIT', 'Senin', 'RP'),
 ('JDPKIT', 'Selasa', 'RP'),
 ('JDPKIT', 'Rabu', 'RP'),
-('JDPKIT', 'Kamis', NULL),
-('JDPKIT', 'Jumat', NULL),
-('JDPKIT', 'Sabtu', NULL),
-('JDPKIT', 'Minggu', NULL),
-('JTSMIT', 'Senin', 'RP'),
-('JTSMIT', 'Selasa', 'RP'),
-('JTSMIT', 'Rabu', 'RP'),
-('JTSMIT', 'Kamis', 'RP'),
-('JTSMIT', 'Jumat', 'RS'),
-('JTSMIT', 'Sabtu', 'RS'),
-('JTSMIT', 'Minggu', 'RP');
+('JDPKIT', 'Kamis', 'RP'),
+('JDPKIT', 'Jumat', 'RP'),
+('JDPKIT', 'Sabtu', 'RP'),
+('JDPKIT', 'Minggu', 'RP');
 
 -- --------------------------------------------------------
 
@@ -130,34 +122,14 @@ CREATE TABLE `migrations` (
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `set_jamKerja`
+-- Struktur dari tabel `set_jamkerja`
 --
 
-CREATE TABLE `set_jamKerja` (
+CREATE TABLE `set_jamkerja` (
   `nik` int(11) NOT NULL,
   `hari` varchar(15) NOT NULL,
   `kode_jamKerja` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data untuk tabel `set_jamKerja`
---
-
-INSERT INTO `set_jamKerja` (`nik`, `hari`, `kode_jamKerja`) VALUES
-(12345, 'Senin', 'RP'),
-(12345, 'Selasa', 'RP'),
-(12345, 'Rabu', 'RP'),
-(12345, 'Kamis', 'RS'),
-(12345, 'Jumat', 'RP'),
-(12345, 'Sabtu', 'RP'),
-(12345, 'Minggu', 'RP'),
-(12346, 'Senin', 'RP'),
-(12346, 'Selasa', 'RP'),
-(12346, 'Rabu', 'RP'),
-(12346, 'Kamis', 'RP'),
-(12346, 'Jumat', 'RS'),
-(12346, 'Sabtu', 'RP'),
-(12346, 'Minggu', 'RS');
 
 -- --------------------------------------------------------
 
@@ -242,7 +214,7 @@ CREATE TABLE `tbl_karyawan` (
 --
 
 INSERT INTO `tbl_karyawan` (`nik`, `nama_lengkap`, `jabatan`, `no_hp`, `password`, `foto`, `kode_dept`, `kode_cabang`, `remember_token`) VALUES
-(12345, 'Hermin, S.Pd', 'Master of IT', '082118471055', '$2y$10$ATp6y8cPGEd6IUuDZ2HwxekJfUkJc/rW2rQJfASU8dzEOlQdl8YEy', '12345.png', 'IT', 'DPK', NULL),
+(12345, 'Hermin, S.Pd', 'Master of IT', '082118471055', '$2y$10$mGh2xEQmbhkF1FluLXGol.mWApu.jZBUV/fFCOQiRa8SeB8h.uIEq', '12345.jpeg', 'IT', 'DPK', NULL),
 (12346, 'Indra', 'Master of IT', '082118471055', '$2y$10$78lw/bflKljAF.Edi1yyB.3FDXVcGL.bIqZxLqEQxstH6dbOtkUMW', '12346.jpg', 'IT', 'TSM', NULL);
 
 -- --------------------------------------------------------
@@ -268,9 +240,7 @@ CREATE TABLE `tbl_pengajuan` (
 --
 
 INSERT INTO `tbl_pengajuan` (`id_izin`, `nik`, `tgl_izin_dari`, `tgl_izin_sampai`, `status`, `sid`, `keterangan`, `kode_cuti`, `status_approved`) VALUES
-('IC112023002', 12345, '2023-11-16', '2023-11-20', 'c', NULL, 'Izin Pulang Kampung', 'C01', 0),
-('IS112023002', 12345, '2023-11-27', '2023-11-28', 's', 'sid-12345.png', 'Sakit Pusing', NULL, 0),
-('IZ112023001', 12345, '2023-11-16', '2023-11-20', 'i', NULL, 'Izin Pulang Kampung', '', 0);
+('IZ062024001', 12345, '2024-06-10', '2024-06-14', 'i', NULL, 'Izin Pulang Kampung', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -298,6 +268,25 @@ CREATE TABLE `tbl_presensi` (
 INSERT INTO `tbl_presensi` (`id_presensi`, `nik`, `tgl_presensi`, `jam_in`, `jam_out`, `foto_in`, `foto_out`, `lokasi_in`, `lokasi_out`, `kode_jamKerja`) VALUES
 (6, 12345, '2023-10-19', '16:47:45', NULL, '12345-2023-10-19-in.png', NULL, '-6.3764714,106.8199032', '-6.3764714,106.8199032', 'RS'),
 (7, 12346, '2023-11-03', '16:41:05', NULL, '12346-2023-11-03-in.png', NULL, '-6.4126976,106.8302336', NULL, 'RS');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `tbl_tiket`
+--
+
+CREATE TABLE `tbl_tiket` (
+  `kode_kupon` varchar(11) NOT NULL,
+  `nama` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `tbl_tiket`
+--
+
+INSERT INTO `tbl_tiket` (`kode_kupon`, `nama`) VALUES
+('123', 'Indra Maulana'),
+('124', 'Andri Mulyana');
 
 -- --------------------------------------------------------
 
@@ -377,6 +366,12 @@ ALTER TABLE `tbl_pengajuan`
 --
 ALTER TABLE `tbl_presensi`
   ADD PRIMARY KEY (`id_presensi`);
+
+--
+-- Indeks untuk tabel `tbl_tiket`
+--
+ALTER TABLE `tbl_tiket`
+  ADD PRIMARY KEY (`kode_kupon`);
 
 --
 -- Indeks untuk tabel `users`

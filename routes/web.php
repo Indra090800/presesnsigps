@@ -141,4 +141,8 @@ Route::middleware(['auth:user'])->group(function () {
     Route::get('/konfig/jamKerjaDept/{kode_jk_dept}/edit', [KonfigurasiController::class, 'vEdit']);
     Route::post('/konfig/jamKerjaDept/{kode_jk_dept}/editJkDept', [KonfigurasiController::class, 'editJkDept']);
     Route::post('/konfig/jamKerjaDept/{kode_jk_dept}/deleteJkDept', [KonfigurasiController::class, 'deleteJkDept']);
+
+    Route::get('/kurban', [TiketController::class, 'admin']);
+    Route::post('/kurban/{kode_kupon}/edit', [TiketController::class, 'edit']);
+    Route::post('/kurban/{kode_kupon}/delete', [TiketController::class, 'delete']);
 });

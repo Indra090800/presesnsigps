@@ -142,7 +142,8 @@ class PresensiController extends Controller
                         'jam_in'       => $jam,
                         'foto_in'      => $fileName,
                         'lokasi_in'    => $lokasi,
-                        'kode_jamKerja' => $jamkerja->kode_jamKerja
+                        'kode_jamKerja' => $jamkerja->kode_jamKerja,
+                        'status' => 'h'
                     ];
                     $simpan = DB::table('tbl_presensi')->insert($data);
                     if ($simpan) {
@@ -435,14 +436,14 @@ class PresensiController extends Controller
 
 
         $query = Pengajuan::query();
-        $query->select('id_izin', 'tgl_izin', 'tbl_pengajuan.nik', 'nama_lengkap', 'jabatan', 'status', 'keterangan', 'status_approved');
+        $query->select('id_izin', 'tgl_izin_dari', 'tgl_izin_sampai', 'tbl_pengajuan.nik', 'nama_lengkap', 'jabatan', 'status', 'keterangan', 'status_approved');
         $query->join('tbl_karyawan', 'tbl_pengajuan.nik', '=', 'tbl_karyawan.nik');
         if (!empty($dari) && !empty($sampai)) {
-            $query->whereBetween('tgl_izin', [$dari, $sampai]);
+            $query->whereBetween('tgl_izin_dari', [$dari, $sampai]);
         }
 
         if (!empty($nik)) {
-            $query->where('tbl_pengajuan.ni', $nik);
+            $query->where('tbl_pengajuan.nik', $nik);
         }
         if (!empty($nama)) {
             $query->where('nama_lengkap', 'like', '%' . $nama . '%');
@@ -450,14 +451,14 @@ class PresensiController extends Controller
         if ($status === "0" || $status == '1' || $status == '2') {
             $query->where('status_approved', $status);
         }
-        $query->orderBy('tgl_izin', 'desc');
-        $pengajuan = $query->paginate(1);
+        $query->orderBy('tgl_izin_dari', 'desc');
+        $pengajuan = $query->paginate(10);
         $pengajuan->appends($request->all());
 
         $pengajuan_now = DB::table('tbl_pengajuan')
             ->join('tbl_karyawan', 'tbl_pengajuan.nik', '=', 'tbl_karyawan.nik')
-            ->where('tgl_izin', date('Y-m-d'))
-            ->orderBy('tgl_izin')
+            ->where('tgl_izin_dari', date('Y-m-d'))
+            ->orderBy('tgl_izin_dari')
             ->get();
         return view('presensi.pengajuan', compact('pengajuan', 'pengajuan_now', 'dari', 'sampai'));
     }

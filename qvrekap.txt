@@ -1,0 +1,381 @@
+SELECT tbl_karyawan.nik,nama_lengkap,jabatan,tgl_1,tgl_2,tgl_3,tgl_4,tgl_5,tgl_6,tgl_7,tgl_8,tgl_9,tgl_10,tgl_11,tgl_12,tgl_13,tgl_14,tgl_15,tgl_16,tgl_17,tgl_18,tgl_19,tgl_20,tgl_21,tgl_22,tgl_23,tgl_24,tgl_25,tgl_26,tgl_27,tgl_28,tgl_29,tgl_30,tgl_31
+FROM tbl_karyawan
+LEFT JOIN(
+    SELECT tbl_presensi.nik,
+    MAX(IF(tgl_presensi = '2024-08-01', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_1,
+    
+    MAX(IF(tgl_presensi = '2024-08-02', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_2,
+    
+    MAX(IF(tgl_presensi = '2024-08-03', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_3,
+    
+    MAX(IF(tgl_presensi = '2024-08-04', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_4,
+    
+    MAX(IF(tgl_presensi = '2024-08-05', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_5,
+    
+    MAX(IF(tgl_presensi = '2024-08-06', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_6,
+    
+    MAX(IF(tgl_presensi = '2024-08-07', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_7,
+    
+    MAX(IF(tgl_presensi = '2024-08-08', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_8,
+    
+    MAX(IF(tgl_presensi = '2024-08-09', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_9,
+    
+    MAX(IF(tgl_presensi = '2024-08-10', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_10,
+    
+    MAX(IF(tgl_presensi = '2024-08-11', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_11,
+    
+    MAX(IF(tgl_presensi = '2024-08-12', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_12,
+    
+    MAX(IF(tgl_presensi = '2024-08-13', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_13,
+    
+    MAX(IF(tgl_presensi = '2024-08-14', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_14,
+    
+    MAX(IF(tgl_presensi = '2024-08-15', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_15,
+    
+    MAX(IF(tgl_presensi = '2024-08-16', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_16,
+    
+    MAX(IF(tgl_presensi = '2024-08-17', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_17,
+    
+    MAX(IF(tgl_presensi = '2024-08-18', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_18,
+    
+    MAX(IF(tgl_presensi = '2024-08-19', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_19,
+    
+    MAX(IF(tgl_presensi = '2024-08-20', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_20,
+    
+    MAX(IF(tgl_presensi = '2024-08-21', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_21,
+    
+    MAX(IF(tgl_presensi = '2024-08-22', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_22,
+    
+    MAX(IF(tgl_presensi = '2024-08-23', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_23,
+    
+    MAX(IF(tgl_presensi = '2024-08-24', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_24,
+    
+    MAX(IF(tgl_presensi = '2024-08-25', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_25,
+    
+    MAX(IF(tgl_presensi = '2024-08-26', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_26,
+    
+    MAX(IF(tgl_presensi = '2024-08-27', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_27,
+    
+    MAX(IF(tgl_presensi = '2024-08-28', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_28,
+    
+    MAX(IF(tgl_presensi = '2024-08-29', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+        ), NULL)) as tgl_29,
+    
+    MAX(IF(tgl_presensi = '2024-08-30', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_30,
+    
+    MAX(IF(tgl_presensi = '2024-08-31', 
+        CONCAT(
+    	IFNULL(jam_in,'NA'),'|',
+        IFNULL(jam_out,'NA'),'|',
+    	IFNULL(tbl_presensi.status,'NA'),'|',
+        IFNULL(nama_jamKerja,'NA'),'|',
+        IFNULL(jam_masuk,'NA'),'|',
+        IFNULL(jam_pulang,'NA'),'|',
+        IFNULL(tbl_presensi.id_izin,'NA'),'|',
+        IFNULL(keterangan,'NA'),'|'
+    ), NULL)) as tgl_31
+    FROM tbl_presensi
+    LEFT JOIN jam_kerja ON tbl_presensi.kode_jamKerja = jam_kerja.kode_jamKerja
+    LEFT JOIN tbl_pengajuan ON tbl_presensi.id_izin = tbl_pengajuan.id_izin
+    GROUP BY nik
+) tbl_presensi ON (tbl_karyawan.nik = tbl_presensi.nik)
+    

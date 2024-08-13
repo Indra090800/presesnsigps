@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Karyawan;
 use App\Models\Pengajuan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -373,46 +374,26 @@ class PresensiController extends Controller
     {
         $bulan = $request->bulan;
         $tahun = $request->tahun;
+        $dari = $tahun . '-' . $bulan . '-01';
+        $sampai = date('Y-m-t', strtotime($dari));
 
-        $rekap = DB::table('tbl_presensi')
-            ->selectRaw('tbl_presensi.nik, nama_lengkap,jam_masuk,jam_pulang,
-            MAX(IF(DaY(tgl_presensi) = 1,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_1,
-            MAX(IF(DaY(tgl_presensi) = 2,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_2,
-            MAX(IF(DaY(tgl_presensi) = 3,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_3,
-            MAX(IF(DaY(tgl_presensi) = 4,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_4,
-            MAX(IF(DaY(tgl_presensi) = 5,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_5,
-            MAX(IF(DaY(tgl_presensi) = 6,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_6,
-            MAX(IF(DaY(tgl_presensi) = 7,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_7,
-            MAX(IF(DaY(tgl_presensi) = 8,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_8,
-            MAX(IF(DaY(tgl_presensi) = 9,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_9,
-            MAX(IF(DaY(tgl_presensi) = 10,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_10,
-            MAX(IF(DaY(tgl_presensi) = 11,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_11,
-            MAX(IF(DaY(tgl_presensi) = 12,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_12,
-            MAX(IF(DaY(tgl_presensi) = 13,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_13,
-            MAX(IF(DaY(tgl_presensi) = 14,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_14,
-            MAX(IF(DaY(tgl_presensi) = 15,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_15,
-            MAX(IF(DaY(tgl_presensi) = 16,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_16,
-            MAX(IF(DaY(tgl_presensi) = 17,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_17,
-            MAX(IF(DaY(tgl_presensi) = 18,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_18,
-            MAX(IF(DaY(tgl_presensi) = 19,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_19,
-            MAX(IF(DaY(tgl_presensi) = 20,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_20,
-            MAX(IF(DaY(tgl_presensi) = 21,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_21,
-            MAX(IF(DaY(tgl_presensi) = 22,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_22,
-            MAX(IF(DaY(tgl_presensi) = 23,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_23,
-            MAX(IF(DaY(tgl_presensi) = 24,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_24,
-            MAX(IF(DaY(tgl_presensi) = 25,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_25,
-            MAX(IF(DaY(tgl_presensi) = 26,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_26,
-            MAX(IF(DaY(tgl_presensi) = 27,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_27,
-            MAX(IF(DaY(tgl_presensi) = 28,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_28,
-            MAX(IF(DaY(tgl_presensi) = 29,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_29,
-            MAX(IF(DaY(tgl_presensi) = 30,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_30,
-            MAX(IF(DaY(tgl_presensi) = 31,CONCAT(jam_in, "-", IFNULL(jam_out,"-")), "")) as tgl_31')
-            ->join('tbl_karyawan', 'tbl_presensi.nik', '=', 'tbl_karyawan.nik')
-            ->leftJoin('jam_kerja', 'tbl_presensi.kode_jamKerja', '=', 'jam_kerja.kode_jamKerja')
-            ->whereRaw('MONTH(tgl_presensi)="' . $bulan . '"')
-            ->whereRaw('YEAR(tgl_presensi)="' . $tahun . '"')
-            ->groupByRaw('tbl_presensi.nik, nama_lengkap, jam_masuk, jam_pulang')
-            ->get();
+        while (strtotime($dari) <= strtotime($sampai)) {
+            $rangetanggal[] = $dari;
+            $dari = date("Y-m-d", strtotime("+1 day", strtotime($dari)));
+        }
+        $jmlhari = count($rangetanggal);
+        $lastrange = $jmlhari - 1;
+        $sampai = $rangetanggal[$lastrange];
+
+        if ($jmlhari == 30) {
+            array_push($rangetanggal, NULL);
+        } elseif ($jmlhari == 29) {
+            array_push($rangetanggal, NULL, NULL);
+        } elseif ($jmlhari == 29) {
+            array_push($rangetanggal, NULL, NULL, NULL);
+        }
+
+        $rekap = DB::table('qv_rekap')->get();
 
         if (isset($_POST['excel'])) {
             $time = date("d-M-Y H:i:s");
@@ -423,7 +404,7 @@ class PresensiController extends Controller
 
         $namabulan = ["", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
-        return view('presensi.rekap', compact('rekap', 'namabulan', 'bulan', 'tahun'));
+        return view('presensi.rekap', compact('rekap', 'namabulan', 'bulan', 'tahun', 'rangetanggal', 'jmlhari'));
     }
 
     public function datapengajuan(Request $request)

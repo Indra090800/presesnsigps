@@ -121,8 +121,9 @@
                         $status = 'Cuti';
                     }
                 @endphp
-                <div class="card mt-1 card_izin" kode_izin="{{ $h->id_izin }}" data-toggle="modal"
-                    data-target="#actionSheetIconed">
+                <div class="card mt-1 card_izin" kode_izin="{{ $h->id_izin }}"
+                    @if ($h->status_approved == 0) data-toggle="modal"
+                    data-target="#actionSheetIconed" @endif>
                     <div class="card-body">
                         <div class="historycontent">
                             <div class="iconpresensi">

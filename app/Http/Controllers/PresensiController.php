@@ -466,24 +466,47 @@ class PresensiController extends Controller
     public function uppengajuan(Request $request, $id_izin)
     {
         $status = $request->status_approved;
-        $update = DB::table('tbl_pengajuan')->where('id_izin', $id_izin)->update([
-            'status_approved' => $status
-        ]);
+        $datapengajuan = DB::table('tbl_pengajuan')->where('id_izin', $id_izin)->first();
+        $tgl_dari = $datapengajuan->tgl_izin_dari;
+        $tgl_sampai = $datapengajuan->tgl_izin_sampai;
+        DB::beginTransaction();
+        try {
+            if ($status == 1) {
+                while (strtotime($tgl_dari) <= strtotime($tgl_sampai)) {
 
-        if ($update) {
+                    DB::table('tbl_presensi')->insert([
+                        'nik' => $datapengajuan->nik,
+                        'tgl_presensi' => $tgl_dari,
+                        'status' => $datapengajuan->status,
+                        'id_izin' => $datapengajuan->id_izin
+                    ]);
+                    $tgl_dari = date("Y-m-d", strtotime("+1 days", strtotime($tgl_dari)));
+                }
+            } else if ($status == 2) {
+                DB::table('tbl_presensi')->where('nik', $datapengajuan->nik)->whereBetween('tgl_presensi', [$tgl_dari, $tgl_sampai])->delete();
+            }
+            DB::table('tbl_pengajuan')->where('id_izin', $id_izin)->update([
+                'status_approved' => $status
+            ]);
+            DB::commit();
             return Redirect::back()->with(['success' => 'Data Berhasil Diupdate !!']);
-        } else {
-            return Redirect::back()->with(['error' => 'Data Gagal Diupdate !!']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            dd($e);
         }
     }
 
     public function batalkan($id_izin)
     {
+        $datapengajuan = DB::table('tbl_pengajuan')->where('id_izin', $id_izin)->first();
+        $tgl_dari = $datapengajuan->tgl_izin_dari;
+        $tgl_sampai = $datapengajuan->tgl_izin_sampai;
         $update = DB::table('tbl_pengajuan')->where('id_izin', $id_izin)->update([
             'status_approved' => 0
         ]);
 
         if ($update) {
+            DB::table('tbl_presensi')->where('nik', $datapengajuan->nik)->whereBetween('tgl_presensi', [$tgl_dari, $tgl_sampai])->delete();
             return Redirect::back()->with(['success' => 'Data Berhasil Diupdate !!']);
         } else {
             return Redirect::back()->with(['error' => 'Data Gagal Diupdate !!']);
@@ -492,10 +515,10 @@ class PresensiController extends Controller
 
     public function cekpengajuan(Request $request)
     {
-        $tgl_izin = $request->tgl_izin;
+        $tgl_izin = $request->tgl_izin_dari;
         $nik = Auth::guard('karyawan')->user()->nik;
 
-        $cek = DB::table('tbl_pengajuan')->where('nik', $nik)->where('tgl_izin', $tgl_izin)->count();
+        $cek = DB::table('tbl_pengajuan')->where('nik', $nik)->where('tgl_izin_dari', $tgl_izin)->count();
         return $cek;
     }
 

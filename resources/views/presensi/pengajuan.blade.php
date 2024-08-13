@@ -287,7 +287,7 @@
                                                     <th>Jabatan</th>
                                                     <th>Status</th>
                                                     <th>Keterangan</th>
-                                                    <th>Status Approved</th>
+                                                    <th class="text-center">Status Approved</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -302,21 +302,77 @@
                                                         <td>{{ $p->jabatan }}</td>
                                                         <td>
                                                             @if ($p->status == 'i')
-                                                                Izin
+                                                                <a href="#" class="btn btn-warning btn-sm">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                        height="24" viewBox="0 0 24 24" fill="none"
+                                                                        stroke="currentColor" stroke-width="2"
+                                                                        stroke-linecap="round" stroke-linejoin="round"
+                                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-briefcase-off">
+                                                                        <path stroke="none" d="M0 0h24v24H0z"
+                                                                            fill="none" />
+                                                                        <path
+                                                                            d="M11 7h8a2 2 0 0 1 2 2v8m-1.166 2.818a1.993 1.993 0 0 1 -.834 .182h-14a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2h2" />
+                                                                        <path
+                                                                            d="M8.185 4.158a2 2 0 0 1 1.815 -1.158h4a2 2 0 0 1 2 2v2" />
+                                                                        <path d="M12 12v.01" />
+                                                                        <path
+                                                                            d="M3 13a20 20 0 0 0 11.905 1.928m3.263 -.763a20 20 0 0 0 2.832 -1.165" />
+                                                                        <path d="M3 3l18 18" />
+                                                                    </svg>
+                                                                    Izin</a>
                                                             @elseif ($p->status == 's')
-                                                                Sakit
+                                                                <a href="#" class="btn btn-danger btn-sm">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                        height="24" viewBox="0 0 24 24" fill="none"
+                                                                        stroke="currentColor" stroke-width="2"
+                                                                        stroke-linecap="round" stroke-linejoin="round"
+                                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-device-audio-tape">
+                                                                        <path stroke="none" d="M0 0h24v24H0z"
+                                                                            fill="none" />
+                                                                        <path
+                                                                            d="M3 5m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" />
+                                                                        <path d="M3 17l4 -3h10l4 3" />
+                                                                        <circle cx="7.5" cy="9.5" r=".5"
+                                                                            fill="currentColor" />
+                                                                        <circle cx="16.5" cy="9.5" r=".5"
+                                                                            fill="currentColor" />
+                                                                    </svg>
+                                                                    Sakit</a>
+                                                            @elseif ($p->status == 'c')
+                                                                <a href="#" class="btn btn-primary btn-sm">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                        height="24" viewBox="0 0 24 24" fill="none"
+                                                                        stroke="currentColor" stroke-width="2"
+                                                                        stroke-linecap="round" stroke-linejoin="round"
+                                                                        class="icon icon-tabler icons-tabler-outline icon-tabler-luggage-off">
+                                                                        <path stroke="none" d="M0 0h24v24H0z"
+                                                                            fill="none" />
+                                                                        <path
+                                                                            d="M10 6h6a2 2 0 0 1 2 2v6m0 4a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2v-10c0 -.546 .218 -1.04 .573 -1.4" />
+                                                                        <path d="M9 5a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v1" />
+                                                                        <path d="M6 10h4m4 0h4" />
+                                                                        <path d="M6 16h10" />
+                                                                        <path d="M9 20v1" />
+                                                                        <path d="M15 20v1" />
+                                                                        <path d="M3 3l18 18" />
+                                                                    </svg>
+                                                                    Cuti</a>
                                                             @endif
                                                         </td>
                                                         <td>{{ $p->keterangan }}</td>
-                                                        <td>
+                                                        <td class="text-center">
                                                             @if ($p->status_approved == 0)
-                                                                <a href="#"
-                                                                    class="btn btn-warning btn-sm">Pending</a>
+                                                                <a href="#" class="btn btn-warning btn-sm"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#edit{{ $p->id_izin }}">Pending</a>
                                                             @elseif ($p->status_approved == 1)
-                                                                <a href="#"
-                                                                    class="btn btn-success btn-sm">Disetujui</a>
+                                                                <a href="#" class="btn btn-success btn-sm"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#edit{{ $p->id_izin }}">Accepted</a>
                                                             @elseif ($p->status_approved == 2)
-                                                                <a href="#" class="btn btn-red btn-sm">Ditolak</a>
+                                                                <a href="#" class="btn btn-red btn-sm"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#edit{{ $p->id_izin }}">Deccepted</a>
                                                             @endif
                                                         </td>
                                                     </tr>

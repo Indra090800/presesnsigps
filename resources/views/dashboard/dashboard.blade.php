@@ -232,7 +232,7 @@
                         }
                     </style>
                     @foreach ($historybulanini as $d)
-                        <div class="card">
+                        <div class="card mb-1">
                             <div class="card-body">
                                 <div class="historycontent">
                                     <div class="iconpresensi">
@@ -268,8 +268,6 @@
                                                     $jmlterlambat = hitungjamterlambar($jadwal_jmasuk, $jpresensi);
                                                 @endphp
                                                 <span class="danger">Terlambat {{ $jmlterlambat }}</span>
-                                            @else
-                                                <span style="color: green">Tepat Waktu</span>
                                             @endif
                                         </div>
                                     </div>

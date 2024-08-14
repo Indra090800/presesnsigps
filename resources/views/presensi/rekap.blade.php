@@ -98,7 +98,7 @@
                     <td>{{ $r->nama_lengkap }}</td>
                     <td>{{ $r->jabatan }}</td>
 
-                    @for ($i = 1; $i < $jmlhari + 1; $i++)
+                    @for ($i = 1; $i <= $jmlhari; $i++)
                         <?php
                         $tgl = 'tgl_' . $i;
                         $datapresensi = explode('|', $r->$tgl);

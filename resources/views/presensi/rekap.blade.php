@@ -82,8 +82,11 @@
                 <th rowspan="2">Nama Karyawan</th>
                 <th rowspan="2">Jabatan</th>
                 <th colspan="{{ $jmlhari }}">Bulan {{ $namabulan[$bulan] }} {{ $tahun }}</th>
-                <th rowspan="2">TH</th>
-                <th rowspan="2">TL</th>
+                <th rowspan="2">H</th>
+                <th rowspan="2">I</th>
+                <th rowspan="2">S</th>
+                <th rowspan="2">C</th>
+                <th rowspan="2">A</th>
             </tr>
             <tr>
                 @foreach ($rangetanggal as $d)
@@ -97,19 +100,56 @@
                     <td>{{ $r->nik }}</td>
                     <td>{{ $r->nama_lengkap }}</td>
                     <td>{{ $r->jabatan }}</td>
-
+                    <?php
+                    $jml_hadir = 0;
+                    $jml_sakit = 0;
+                    $jml_ijin = 0;
+                    $jml_cuti = 0;
+                    $jml_tanpa_keterangann = 0;
+                    ?>
                     @for ($i = 1; $i <= $jmlhari; $i++)
                         <?php
                         $tgl = 'tgl_' . $i;
                         $datapresensi = explode('|', $r->$tgl);
+                        if ($r->$tgl != null) {
+                            $status = $datapresensi[2];
+                        } else {
+                            $status = '';
+                        }
+                        
+                        if ($status == 'h') {
+                            $jml_hadir += 1;
+                        } elseif ($status == 'c') {
+                            $jml_cuti += 1;
+                        } elseif ($status == 'i') {
+                            $jml_ijin += 1;
+                        } elseif ($status == '') {
+                            $jml_tanpa_keterangann += 1;
+                        } elseif ($status == 's') {
+                            $jml_sakit += 1;
+                        }
                         ?>
-                        <td class="text-center">
+                        <td style="text-align: center; {{ $status != null ? '' : 'background-color: #FF0000' }}">
                             @if ($r->$tgl != null)
-                                {{ $datapresensi[2] }}
+                                {{ $status }}
                             @endif
                         </td>
                     @endfor
-
+                    <td style="text-align: center">
+                        {{ $jml_hadir }}
+                    </td>
+                    <td style="text-align: center">
+                        {{ $jml_ijin }}
+                    </td>
+                    <td style="text-align: center">
+                        {{ $jml_sakit }}
+                    </td>
+                    <td style="text-align: center">
+                        {{ $jml_cuti }}
+                    </td>
+                    <td style="text-align: center">
+                        {{ $jml_tanpa_keterangann }}
+                    </td>
                 </tr>
             @endforeach
 
